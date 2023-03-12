@@ -24,4 +24,4 @@ hs_err_pid*
 replay_pid*
 
 #volumes
-mysql_data
+backend/mysql_data
