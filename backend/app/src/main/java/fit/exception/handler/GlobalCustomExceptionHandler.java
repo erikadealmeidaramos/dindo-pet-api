@@ -1,7 +1,7 @@
 package fit.exception.handler;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,7 +17,7 @@ import fit.model.ApiError;
 @ControllerAdvice
 public class GlobalCustomExceptionHandler {
 
-  private static final Logger logger = LogManager.getLogger(GlobalCustomExceptionHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(GlobalCustomExceptionHandler.class);
 
   @ExceptionHandler(UserCreationException.class)
   public ResponseEntity<Object> handleUserCreationException(UserCreationException ex) {

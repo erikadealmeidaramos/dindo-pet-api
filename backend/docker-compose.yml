@@ -4,15 +4,19 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: e44f84gs
-      MYSQL_DATABASE: dindo-pet
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
       JDBC_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
   app:
     build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8080:8080"
