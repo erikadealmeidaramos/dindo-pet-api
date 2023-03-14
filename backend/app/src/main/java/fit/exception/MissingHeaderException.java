@@ -1,13 +1,15 @@
 package fit.exception;
 
-public class MissingHeaderException extends Exception {
+import javax.servlet.ServletException;
+
+public class MissingHeaderException extends ServletException {
 
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
-public MissingHeaderException(String message) {
+  public MissingHeaderException(String message) {
     super(message);
   }
 

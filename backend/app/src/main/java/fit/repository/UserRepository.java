@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
@@ -18,6 +19,8 @@ public class UserRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public void save(User user) {
 		try {
@@ -28,10 +31,42 @@ public class UserRepository {
 					.addValue("password", user.getPassword())
 					.addValue("cpf", user.getCpf())
 					.addValue("pix", user.getPix());
-			jdbcTemplate.update(sql, parameters);
+			namedParameterJdbcTemplate.update(sql, parameters);
 		} catch (DataAccessException e) {
 			throw new RuntimeException("An error occurred while executing the query: ", e);
 		}
+	}
+
+	public User findById(int id) {
+		User user = null;
+		try {
+			user = jdbcTemplate.query("SELECT * FROM User WHERE idUser = ?",
+					new PreparedStatementSetter() {
+						public void setValues(PreparedStatement ps) throws SQLException {
+							ps.setInt(1, id);
+						}
+					},
+					new ResultSetExtractor<User>() {
+						public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+							if (rs.next()) {
+								User user = new User(
+										rs.getInt("idUser"),
+										rs.getString("nameUser"),
+										rs.getString("email"),
+										rs.getString("password"),
+										rs.getString("cpf"),
+										rs.getString("pix"));
+								return user;
+							} else {
+								return null;
+							}
+						}
+					});
+		} catch (DataAccessException e) {
+			throw new RuntimeException("An error occurred while executing the query: ", e);
+		}
+
+		return user;
 	}
 
 	public User findByUserEmailAndPassword(String email, String password) {
@@ -48,7 +83,7 @@ public class UserRepository {
 						public User extractData(ResultSet rs) throws SQLException, DataAccessException {
 							if (rs.next()) {
 								User user = new User(
-										rs.getInt("id"),
+										rs.getInt("idUser"),
 										rs.getString("nameUser"),
 										rs.getString("email"),
 										rs.getString("password"),

@@ -1,13 +1,15 @@
 package fit.exception;
 
-public class InvalidTokenException extends Exception {
+import javax.servlet.ServletException;
+
+public class InvalidTokenException extends ServletException {
 
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+   * 
+   */
+  private static final long serialVersionUID = 1L;
 
-public InvalidTokenException(String message) {
+  public InvalidTokenException(String message) {
     super(message);
   }
 
